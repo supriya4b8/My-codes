@@ -1,0 +1,15 @@
+trigger CreateChildAccountTrigger on Account (after insert) {
+    List<Account> childAccounts = new List<Account>();
+    for (Account parentAccount : Trigger.new) {
+        if (parentAccount.Status__c == 'Cold') {
+            Account childAccount = new Account(
+                Name = parentAccount.Name,
+                ParentId = parentAccount.Id,
+                Status__c = 'Cold',
+                Child_Account__c = parentAccount.Id 
+            );
+            childAccounts.add(childAccount);
+        }
+    }
+    insert childAccounts;
+}
